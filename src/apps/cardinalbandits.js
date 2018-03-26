@@ -67,10 +67,13 @@ export class CardinalBandits implements Experiment {
   }
 
   getQuery(): string {
+    // if the priority list is empty (haven't recieved one yet) or if we've
+    // exhausted all the arms, pick a random arm. otherwise, perform the normal
+    // sampling procedure.
     const idx = ((this.priorityList.length === 0 || (this.seen.length >= this.targets.length))) ? (
       Math.floor(Math.random()*this.targets.length)
     ) : (
-      this.priorityList[this.priorityPtr]
+      this.priorityList[this.priorityPtr++]
     );
 
     return this.targets[idx];
