@@ -1,11 +1,20 @@
 // @flow
 
+/**
+ * A sum type of possible experiment types.
+ */
 type AppTypes = 'cardinalbandits';
 
 import type {Experiment} from './experiment';
 import {CardinalBandits} from './apps/cardinalbandits';
 
-export function inject(appType: AppTypes, expUid: string,
+/**
+ * Dispatches experiment creation and initialization.
+ *
+ * This is the primary entry point into the NEXT library when manually wiring
+ * page elements up.
+ */
+export function experiment(appType: AppTypes, expUid: string,
                        settings: {apiBase?: string, stateBase?: string}): Experiment
 {
   const apiBase = settings.apiBase || 'https://3nvq6ef1ri.execute-api.us-west-2.amazonaws.com/test';

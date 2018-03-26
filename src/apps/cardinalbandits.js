@@ -4,6 +4,12 @@ import type {Experiment} from '../experiment';
 import {randomString} from '../util';
 import axios from 'axios';
 
+/**
+ * Contains logic and front-end algorithms for a Cardinal Bandits experiment.
+ *
+ * @param expUid the experiment ID
+ * @param urls URLs to the backend
+ */
 export class CardinalBandits implements Experiment {
   expUid: string;
   participantUid: string;
@@ -57,11 +63,21 @@ export class CardinalBandits implements Experiment {
     }
   }
 
+  /**
+   * Load data necessary to run the sampling algorithm.
+   *
+   * @return {Promise<void>} a unit Promise conditional on the completion
+   * of all data loading.
+   */
   async load() {
     this.targets = await self._loadTargets(this.urls.targets);
     this.priorityList = await self._loadPriorityList(this.urls.priorityList);
   }
 
+  /**
+   * Gets a new query to display to the user, in the string form which we'll
+   * show to them as, eg, a caption.
+   */
   getQuery(): string {
     // if the priority list is empty (haven't recieved one yet) or if we've
     // exhausted all the arms, pick a random arm. otherwise, perform the normal
@@ -75,6 +91,13 @@ export class CardinalBandits implements Experiment {
     return this.targets[idx];
   }
 
+  /**
+   * Processes a user's response to a query, sending an arm index and a reward
+   * to the backend.
+   *
+   * @param idx the index of the arm which the user pulled.
+   * @param reward the reward assigned to the arm by the user.
+   */
   processAnswer(idx: number, reward: number) {
     axios.post(`${this.urls.apiBase}/CardinalBandits/processAnswer`, {
       exp_uid: this.expUid,
