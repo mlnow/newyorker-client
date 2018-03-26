@@ -8,9 +8,7 @@ export class CardinalBandits implements Experiment {
   expUid: string;
   participantUid: string;
   // URLs to data we need
-  apiBaseUrl: string;
-  targetsUrl: string;
-  priorityListUrl: string;
+  urls: {apiBase: string, targets: string, priorityList: string};
 
   // list of targets.
   targets: string[] = [];
@@ -27,9 +25,7 @@ export class CardinalBandits implements Experiment {
               })
   {
     this.expUid = expUid;
-    this.apiBaseUrl      = urls.apiBase;
-    this.targetsUrl      = urls.targets;
-    this.priorityListUrl = urls.priorityList;
+    this.urls = urls;
 
     // derive the participant id. if this user has already visited, they will
     // have a pid stored in localStorage, which we can simply retrieve. if not,
@@ -62,8 +58,8 @@ export class CardinalBandits implements Experiment {
   }
 
   async load() {
-    this.targets = await self._loadTargets(this.targetsUrl);
-    this.priorityList = await self._loadPriorityList(this.priorityListUrl);
+    this.targets = await self._loadTargets(this.urls.targets);
+    this.priorityList = await self._loadPriorityList(this.urls.priorityList);
   }
 
   getQuery(): string {
