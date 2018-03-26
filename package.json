@@ -20,5 +20,8 @@
     "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-node-resolve": "^3.3.0"
+  },
+  "dependencies": {
+    "axios": "^0.18.0"
   }
 }
