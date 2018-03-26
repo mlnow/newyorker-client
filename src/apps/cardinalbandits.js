@@ -76,6 +76,10 @@ export class CardinalBandits implements Experiment {
   }
 
   processAnswer(idx: number, reward: number) {
-    throw new Error('implement me');
+    axios.post(`${this.urls.apiBase}/CardinalBandits/processAnswer`, {
+      exp_uid: this.expUid,
+      target_id: idx, target_reward: reward,
+      participant_uid: this.participantUid,
+    });
   }
 }
