@@ -5,7 +5,7 @@ import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
 
 export default {
-  input: 'src/lib.js',
+  input: 'src/next.js',
   output: {
     file: 'dist/next.js',
     format: 'umd',
