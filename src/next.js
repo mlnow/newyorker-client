@@ -2,19 +2,6 @@
 
 import axios from 'axios';
 
-/**
- * Returns a random string of length `len`, sampling with replacement from `chars`.
- */
-export function randomString(len: number, chars: string = "0123456789abcdef"): string {
-  let str = "";
-  chars = chars;
-  for (let i=0; i<len; i++) {
-    str += chars[Math.floor(Math.random() * chars.length)];
-  }
-
-  return str;
-};
-
 type Target = {
   primary_description: string;
 };
@@ -94,6 +81,10 @@ export class Experiment {
     this.priorityList = await this._loadPriorityList(this.urls.priorityList);
   }
 
+  init(cb: () => void) {
+    this.load().then(cb);
+  }
+
   /**
    * Gets a new query to display to the user.
    */
@@ -127,3 +118,16 @@ export class Experiment {
     });
   }
 }
+
+/**
+ * Returns a random string of length `len`, sampling with replacement from `chars`.
+ */
+function randomString(len: number, chars: string = "0123456789abcdef"): string {
+  let str = "";
+  chars = chars;
+  for (let i=0; i<len; i++) {
+    str += chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  return str;
+};
