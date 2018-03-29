@@ -89,17 +89,23 @@ export class Experiment {
    * Gets a new query to display to the user.
    */
   getQuery(): string {
-    // if the priority list is empty (haven't recieved one yet) or if we've
-    // exhausted all the arms, pick a random arm. otherwise, perform the normal
-    // sampling procedure.
-    const idx = ((this.priorityList.length === 0 || (this.seen.length >= this.targets.length))) ? (
-      Math.floor(Math.random()*this.targets.length)
-    ) : (
-      this.priorityList[this.priorityPtr++]
-    );
+    // mirrors the proxy
+    const N = this.priorityList.length;
+    let k = this.priorityPtr++ % N;
+    let idx;
+
+    while ((k < N) && (this.seen.indexOf(this.priorityList[k]) != -1)) {
+      k++;
+    }
+
+    if (k == N) {
+      idx = Math.floor(Math.random()*N);
+    } else {
+      idx = this.priorityList[k];
+    }
 
     this.currentArm = idx;
-
+    this.seen.push(idx);
     return this.targets[idx]['primary_description'];
   }
 
