@@ -99,7 +99,7 @@ export class CardinalBandits implements Experiment {
    * @param reward the reward assigned to the arm by the user.
    */
   processAnswer(idx: number, reward: number) {
-    axios.post(`${this.urls.apiBase}/CardinalBandits/processAnswer`, {
+    axios.post(`${this.urls.apiBase}/processAnswer`, {
       exp_uid: this.expUid,
       target_id: idx, target_reward: reward,
       participant_uid: this.participantUid,
