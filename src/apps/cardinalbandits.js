@@ -45,7 +45,7 @@ export class CardinalBandits implements Experiment {
     }
   }
 
-  async _fetchTargets(url: string): Promise<string[]> {
+  async _loadTargets(url: string): Promise<string[]> {
     const response = await axios.get(url);
     if (Array.isArray(response.data)) {
       return response.data;
@@ -70,8 +70,8 @@ export class CardinalBandits implements Experiment {
    * of all data loading.
    */
   async load() {
-    this.targets = await self._loadTargets(this.urls.targets);
-    this.priorityList = await self._loadPriorityList(this.urls.priorityList);
+    this.targets = await this._loadTargets(this.urls.targets);
+    this.priorityList = await this._loadPriorityList(this.urls.priorityList);
   }
 
   /**
