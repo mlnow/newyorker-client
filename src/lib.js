@@ -17,13 +17,13 @@ import {CardinalBandits} from './apps/cardinalbandits';
 export function experiment(appType: AppTypes, expUid: string,
                        settings: {apiBase?: string, stateBase?: string}): Experiment
 {
-  const apiBase = settings.apiBase || 'https://3nvq6ef1ri.execute-api.us-west-2.amazonaws.com/test';
-  const stateBase = settings.stateBase || 'https://d3pi6g4o3df8d3.cloudfront.net';
+  const apiBase = settings.apiBase || 'https://n5b3n0mgj2.execute-api.us-west-2.amazonaws.com/dev';
+  const stateBase = settings.stateBase || 'https://s3-us-west-2.amazonaws.com/next2-cardinalbandits';
   switch (appType) {
     case 'cardinalbandits': {
       return new CardinalBandits(expUid, {apiBase,
         priorityList: `${stateBase}/${expUid}/priority_list.json`,
-        targets: `${stateBase}${expUid}/targets.json`});
+        targets: `${stateBase}/${expUid}/targets.json`});
     };
     default: throw new Error('Unknown app type!');
   }
