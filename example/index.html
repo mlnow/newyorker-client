@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>next2-client example</title>
+</head>
+<body>
+  <div>
+    <img src="https://s3-us-west-2.amazonaws.com/next2-cardinalbandits/cbucb2940253355369912d47bc27b5ee56f/cartoon.jpg">
+    <div id="caption">loading...</div>
+    <div>
+      <button onClick="respond(1)">unfunny</button>
+      <button onClick="respond(2)">somewhat funny</button>
+      <button onClick="respond(3)">funny</button>
+    </div>
+  </div>
+
+  <script src="next.js"></script>
+  <script>
+    var app = new NEXT.Experiment('cbucb2940253355369912d47bc27b5ee56f');
+    var caption = document.getElementById('caption');
+    app.init(function () {
+      caption.textContent = '"' + app.getQuery() + '"'
+    });
+
+    function respond(reward) {
+      app.processAnswer(app.currentArm, reward);
+      caption.textContent = '"' + app.getQuery() + '"';
+    }
+  </script>
+</body>
+</html>
