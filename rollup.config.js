@@ -7,7 +7,8 @@ export default {
   input: 'src/lib.js',
   output: {
     file: 'dist/next.js',
-    format: 'cjs'
+    format: 'umd',
+    name: 'NEXT'
   },
   plugins: [
     resolve({
@@ -16,7 +17,8 @@ export default {
       preferBuiltins: true,
     }),
     babel({
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
+      runtimeHelpers: true,
     }),
     common(),
     json()
