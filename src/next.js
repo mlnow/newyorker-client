@@ -15,36 +15,24 @@ export function randomString(len: number, chars: string = "0123456789abcdef"): s
   return str;
 };
 
-/**
- * Dispatches experiment creation and initialization.
- *
- * This is the primary entry point into the NEXT library when manually wiring
- * page elements up.
- */
-export function experiment(expUid: string,
-                       settings: {apiBase?: string, stateBase?: string}): CardinalBandits
-{
-  const apiBase = settings.apiBase || 'https://n5b3n0mgj2.execute-api.us-west-2.amazonaws.com/dev';
-  const stateBase = settings.stateBase || 'https://s3-us-west-2.amazonaws.com/next2-cardinalbandits';
-  return new CardinalBandits(expUid, {apiBase,
-    priorityList: `${stateBase}/${expUid}/priority_list.json`,
-    targets: `${stateBase}/${expUid}/targets.json`});
-}
+type Target = {
+  primary_description: string;
+};
 
 /**
- * Contains logic and front-end algorithms for a Cardinal Bandits experiment.
+ * Contains logic and front-end algorithms for a Caption Contest (Cardinal Bandits experiment).
  *
  * @param expUid the experiment ID
  * @param urls URLs to the backend
  */
-export class CardinalBandits {
+export class Experiment {
   expUid: string;
   participantUid: string;
   // URLs to data we need
   urls: {apiBase: string, targets: string, priorityList: string};
 
   // list of targets.
-  targets: mixed[] = [];
+  targets: Target[] = [];
   // a list encoding the priority of sampling each arm. the first element is
   // the most important arm to sample.
   priorityList: number[] = [];
@@ -55,12 +43,15 @@ export class CardinalBandits {
   // the current arm
   currentArm: number;
 
-  constructor(expUid: string, urls: {
-                apiBase: string, targets: string, priorityList: string
-              })
-  {
+  constructor(expUid: string, settings: {apiBase?: string, stateBase?: string} = {}) {
     this.expUid = expUid;
-    this.urls = urls;
+    const apiBase = settings.apiBase || 'https://n5b3n0mgj2.execute-api.us-west-2.amazonaws.com/dev';
+    const stateBase = settings.stateBase || 'https://s3-us-west-2.amazonaws.com/next2-cardinalbandits';
+    this.urls = {
+      apiBase,
+      priorityList: `${stateBase}/${expUid}/priority_list.json`,
+      targets: `${stateBase}/${expUid}/targets.json`
+    };
 
     // derive the participant id. if this user has already visited, they will
     // have a pid stored in localStorage, which we can simply retrieve. if not,
@@ -74,7 +65,7 @@ export class CardinalBandits {
     }
   }
 
-  async _loadTargets(url: string): Promise<mixed[]> {
+  async _loadTargets(url: string): Promise<Target[]> {
     const response = await axios.get(url);
     if (Array.isArray(response.data)) {
       return response.data;
@@ -104,10 +95,9 @@ export class CardinalBandits {
   }
 
   /**
-   * Gets a new query to display to the user, in the string form which we'll
-   * show to them as, eg, a caption.
+   * Gets a new query to display to the user.
    */
-  getQuery(): mixed {
+  getQuery(): string {
     // if the priority list is empty (haven't recieved one yet) or if we've
     // exhausted all the arms, pick a random arm. otherwise, perform the normal
     // sampling procedure.
@@ -119,7 +109,7 @@ export class CardinalBandits {
 
     this.currentArm = idx;
 
-    return this.targets[idx];
+    return this.targets[idx]['primary_description'];
   }
 
   /**
@@ -135,9 +125,5 @@ export class CardinalBandits {
       target_id: idx, target_reward: reward,
       participant_uid: this.participantUid,
     });
-  }
-
-  respond(reward: number) {
-    this.processAnswer(this.currentArm, reward);
   }
 }
