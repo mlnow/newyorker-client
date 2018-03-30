@@ -22,5 +22,6 @@
     "rollup-plugin-node-resolve": "^3.3.0"
   },
   "dependencies": {
+    "promise-polyfill": "^7.1.1"
   }
 }

@@ -1,5 +1,6 @@
 // @flow
 
+import 'promise-polyfill/src/polyfill';
 import * as ajax from './ajax';
 
 type Target = {

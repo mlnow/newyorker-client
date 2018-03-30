@@ -18,7 +18,7 @@
   <script>
     var app = new NEXT.Experiment('cbucb2940253355369912d47bc27b5ee56f');
     var caption = document.getElementById('caption');
-    app.init(function () {
+    app.load().then(function () {
       caption.textContent = '"' + app.getQuery() + '"'
     });
 
