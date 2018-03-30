@@ -16,14 +16,21 @@
 
   <script src="next.js"></script>
   <script>
+    // Instantiate the state object for a contest.
     var app = new NEXT.Experiment('cbucb2940253355369912d47bc27b5ee56f');
+    // Get a reference to the HTML element which displays the caption.
     var caption = document.getElementById('caption');
+    // Load the data (priorityList and targets), and then display our first query.
     app.load().then(function () {
       caption.textContent = '"' + app.getQuery() + '"'
     });
 
+    // this function is called by the onClick handlers of the response buttons.
     function respond(reward) {
+      // process a user's rating for _this current caption_
       app.processAnswer(app.currentArm, reward);
+
+      // and _then_ get a new caption
       caption.textContent = '"' + app.getQuery() + '"';
     }
   </script>
