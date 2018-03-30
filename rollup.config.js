@@ -1,6 +1,5 @@
 import common from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
-import globals from 'rollup-plugin-node-globals';
 import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
 
@@ -22,7 +21,6 @@ export default {
       runtimeHelpers: true,
     }),
     common(),
-    json(),
-    globals()
+    json()
   ]
 };

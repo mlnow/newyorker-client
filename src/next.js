@@ -1,6 +1,6 @@
 // @flow
 
-import axios from 'axios';
+import * as ajax from './ajax';
 
 type Target = {
   primary_description: string;
@@ -52,22 +52,26 @@ export class Experiment {
     }
   }
 
-  async _loadTargets(url: string): Promise<Target[]> {
-    const response = await axios.get(url);
-    if (Array.isArray(response.data)) {
-      return response.data;
-    } else {
-      return Promise.reject(new Error("didn't recieve expected type"));
-    }
+  _loadTargets(url: string): Promise<Target[]> {
+    return ajax.get(url)
+      .then((response) => {
+        if (Array.isArray(response.data)) {
+          return response.data;
+        } else {
+          return Promise.reject(new Error("didn't recieve expected type"));
+        }
+      });
   }
 
-  async _loadPriorityList(url: string): Promise<number[]> {
-    const response = await axios.get(url);
-    if (Array.isArray(response.data)) {
-      return response.data;
-    } else {
-      return Promise.reject(new Error("didn't recieve expected type"));
-    }
+  _loadPriorityList(url: string): Promise<number[]> {
+    return ajax.get(url)
+      .then((response) => {
+        if (Array.isArray(response.data)) {
+          return response.data;
+        } else {
+          return Promise.reject(new Error("didn't recieve expected type"));
+        }
+      });
   }
 
   /**
@@ -76,14 +80,14 @@ export class Experiment {
    * @return {Promise<void>} a unit Promise conditional on the completion
    * of all data loading.
    */
-  async load() {
-    this.targets = await this._loadTargets(this.urls.targets);
-    this.priorityList = await this._loadPriorityList(this.urls.priorityList);
-  }
-
-  init(cb: () => void) {
-    this.load().then(cb);
-  }
+  load(): Promise<void> {
+    return Promise.all([
+      this._loadTargets(this.urls.targets)
+        .then(x => {this.targets = x;}),
+      this._loadPriorityList(this.urls.priorityList)
+        .then(x => {this.priorityList = x;}),
+    ]).then(() => {}); // erase the type
+}
 
   /**
    * Gets a new query to display to the user.
@@ -117,7 +121,7 @@ export class Experiment {
    * @param reward the reward assigned to the arm by the user.
    */
   processAnswer(idx: number, reward: number) {
-    axios.post(`${this.urls.apiBase}/processAnswer`, {
+    ajax.post(`${this.urls.apiBase}/processAnswer`, {
       exp_uid: this.expUid,
       target_id: idx, target_reward: reward,
       participant_uid: this.participantUid,
