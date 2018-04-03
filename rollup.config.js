@@ -2,11 +2,14 @@ import common from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
+import uglify from 'rollup-plugin-uglify';
+
+const minify = process.env.minify || false;
 
 export default {
   input: 'src/next.js',
   output: {
-    file: 'dist/next.js',
+    file: minify ? 'dist/next.min.js' : 'dist/next.js',
     format: 'umd',
     name: 'NEXT'
   },
@@ -21,6 +24,7 @@ export default {
       runtimeHelpers: true,
     }),
     common(),
-    json()
+    json(),
+    minify ? uglify() : {}
   ]
 };
