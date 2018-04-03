@@ -3,7 +3,11 @@
 Look in `example/index.html` for commented code explaining how to wire this up.
 
 ## Where can I find an up-to-date `next.min.js` build?
-TODO: insert CDN link.
+Right [here](https://dslg2854tcnag.cloudfront.net/js/next.min.js).
+The script tag you want is
+```html
+<script src="https://dslg2854tcnag.cloudfront.net/js/next.min.js"></script>
+```
 
 # The JS API
 * `Experiment`: class to encapsulate a caption contest's state
