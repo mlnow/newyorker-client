@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c && rollup -c --environment minify",
+    "publish": "aws s3 cp dist/next.min.js s3://next2-cardinalbandits/js/next.min.js --acl public-read",
     "prepublish": "npm run build"
   },
   "devDependencies": {
