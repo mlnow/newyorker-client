@@ -2,6 +2,15 @@
 ## How do I implement this?
 Look in `example/index.html` for commented code explaining how to wire this up.
 
+### Why is there a blank `next.js` file in `example/`?
+Since this code uses promises and whatnot, but we need to support old browsers, we use Babel and a promise polyfill.
+The code in `src/next.js` is flow-typechecked, polyfilled, and run through babel by the npm `build` task, which you can run with
+```
+$ npm run build
+```
+This generates two files, `dist/next.js` and `dist/next.min.js`. The `next.js` file in `example/` is just a symlink to `dist/next.js`,
+so that you can run a Python `SimpleHTTPServer` from the `example/` directory and play with the example locally after building the next client library.
+
 ## Where can I find an up-to-date `next.min.js` build?
 Right [here](https://dslg2854tcnag.cloudfront.net/js/next.min.js).
 The script tag you want is
