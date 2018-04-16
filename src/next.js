@@ -95,7 +95,6 @@ export class Experiment {
    * Gets a new query to display to the user.
    */
   getQuery(): string {
-    // mirrors the proxy
     const N = this.targets.length;
     let idx;
     if (!this.priorityList) {
