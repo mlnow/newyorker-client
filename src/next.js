@@ -23,7 +23,7 @@ export class Experiment {
   targets: Target[] = [];
   // a list encoding the priority of sampling each arm. the first element is
   // the most important arm to sample.
-  priorityList: number[] = [];
+  priorityList: ?(number[]) = [];
   // a pointer to our current location in the priority list.
   priorityPtr: number = 0;
   // caption indices we've seen.
@@ -86,7 +86,8 @@ export class Experiment {
       this._loadTargets(this.urls.targets)
         .then(x => {this.targets = x;}),
       this._loadPriorityList(this.urls.priorityList)
-        .then(x => {this.priorityList = x;}),
+        .then(x => {this.priorityList = x;})
+        .catch(_ => {this.priorityList = null;}),
     ]).then(() => {}); // erase the type
 }
 
@@ -95,18 +96,22 @@ export class Experiment {
    */
   getQuery(): string {
     // mirrors the proxy
-    const N = this.priorityList.length;
-    let k = this.priorityPtr++ % N;
+    const N = this.targets.length;
     let idx;
-
-    while ((k < N) && (this.seen.indexOf(this.priorityList[k]) != -1)) {
-      k++;
-    }
-
-    if (k == N) {
+    if (!this.priorityList) {
       idx = Math.floor(Math.random()*N);
     } else {
-      idx = this.priorityList[k];
+      let k = this.priorityPtr++ % N;
+
+      while ((k < N) && (this.seen.indexOf(this.priorityList[k]) != -1)) {
+        k++;
+      }
+
+      if (k == N) {
+        idx = Math.floor(Math.random()*N);
+      } else {
+        idx = this.priorityList[k];
+      }
     }
 
     this.currentArm = idx;
